@@ -1,0 +1,60 @@
+---
+import Logo from './Logo.astro';
+import { u, site, SECCOES, temValor } from '../lib/site';
+const ano = new Date().getFullYear();
+---
+<footer class="rodape">
+  <div class="contentor grelha">
+    <div class="marca">
+      <a href={u('/')} aria-label="Vox Aquilae — página inicial"><Logo /></a>
+      <p>{site.descricao}</p>
+    </div>
+    <div>
+      <h2>Secções</h2>
+      <ul>
+        {Object.entries(SECCOES).map(([id, s]) => <li><a href={u(`/seccao/${id}/`)}>{s.nome}</a></li>)}
+      </ul>
+    </div>
+    <div>
+      <h2>O jornal</h2>
+      <ul>
+        <li><a href={u('/sobre/')}>Sobre o Vox Aquilae</a></li>
+        <li><a href={u('/participar/')}>Participar e enviar testemunhos</a></li>
+        <li><a href={u('/arquivo/')}>Arquivo</a></li>
+        <li><a href={u('/pesquisa/')}>Pesquisa</a></li>
+        <li><a href={u('/rss.xml')}>RSS</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Acompanhar</h2>
+      <ul>
+        {temValor(site.canal_whatsapp) && <li><a href={site.canal_whatsapp} rel="noopener">Canal de WhatsApp</a></li>}
+        {temValor(site.newsletter) && <li><a href={site.newsletter} rel="noopener">Newsletter por email</a></li>}
+        {temValor(site.instagram) && <li><a href={site.instagram} rel="noopener">Instagram</a></li>}
+        {temValor(site.email_redacao) && <li><a href={`mailto:${site.email_redacao}`}>Escrever à redação</a></li>}
+        {temValor(site.site_colegio) && <li><a href={site.site_colegio} rel="noopener">Colégio Planalto</a></li>}
+        <li><a href={u('/participar/')}>Como participar</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="contentor base">
+    <span>© {ano} Vox Aquilae · Colégio Planalto</span>
+    <span>As imagens de alunos são publicadas apenas com autorização das famílias.</span>
+  </div>
+</footer>
+
+<style>
+  .rodape { background: var(--navy); color: #d8dce6; margin-top: 40px; }
+  .rodape a { color: #fff; text-decoration: none; }
+  .rodape a:hover { color: var(--gold-claro); }
+  .grelha { display: grid; grid-template-columns: 1.6fr repeat(3, minmax(0, 1fr)); gap: 40px; padding-top: 56px; padding-bottom: 40px; }
+  .marca a { display: block; max-width: 320px; color: #fff; --gold-texto: var(--gold-claro); }
+  .marca a :global(.logo) { color: #fff; }
+  .marca p { margin-top: 18px; font-size: 15px; max-width: 38ch; }
+  h2 { font-family: var(--sans); font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold-claro); margin-bottom: 14px; }
+  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+  li a { display: inline-block; padding: 6px 0; font-size: 15px; }
+  .base { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 24px; border-top: 1px solid rgba(255,255,255,.15); padding-top: 18px; padding-bottom: 28px; font-size: 13px; color: #aeb5c6; }
+  @media (max-width: 900px) { .grelha { grid-template-columns: repeat(2, minmax(0, 1fr)); } .marca { grid-column: 1 / -1; } }
+  @media (max-width: 520px) { .grelha { grid-template-columns: minmax(0, 1fr); gap: 28px; } }
+</style>

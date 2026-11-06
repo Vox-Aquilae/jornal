@@ -1,0 +1,87 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Capa from '../../components/Capa.astro';
+import Partilha from '../../components/Partilha.astro';
+import CartaoNoticia from '../../components/CartaoNoticia.astro';
+import { u, SECCOES, fmtData, noticiasPublicadas, tempoLeitura, temValor } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const todas = await noticiasPublicadas();
+  return todas.map((n) => ({ params: { id: n.id }, props: { n } }));
+}
+const { n } = Astro.props;
+const d = n.data;
+const { Content } = await render(n);
+const s = SECCOES[d.seccao];
+const relacionadas = (await noticiasPublicadas())
+  .filter((x) => x.id !== n.id)
+  .sort((a, b) => Number(b.data.seccao === d.seccao) - Number(a.data.seccao === d.seccao))
+  .slice(0, 3);
+---
+<Base titulo={d.titulo} descricao={d.resumo} imagem={d.imagem} tipo="article">
+  <article class="contentor artigo">
+    <header class="artigo-cabeca">
+      <div class="topo">
+        <a class="kicker" href={u(`/seccao/${d.seccao}/`)}>{s.nome}</a>
+        {d.exemplo && <span class="selo-exemplo">Conteúdo de exemplo</span>}
+      </div>
+      <h1>{d.titulo}</h1>
+      <p class="resumo">{d.resumo}</p>
+      <div class="meta">
+        <span>Por {d.autor}</span>
+        <span><time datetime={d.data.toISOString().slice(0, 10)}>{fmtData(d.data)}</time></span>
+        <span>{tempoLeitura(n.body)} min de leitura</span>
+      </div>
+    </header>
+
+    <figure class="artigo-imagem">
+      <Capa imagem={d.imagem} alt={d.legenda} seccao={d.seccao} proporcao="16 / 8" prioridade />
+      {temValor(d.legenda) && <figcaption>{d.legenda}</figcaption>}
+    </figure>
+
+    <div class="artigo-corpo">
+      <aside class="lateral"><Partilha titulo={d.titulo} /></aside>
+      <div class="prosa capitular"><Content /></div>
+    </div>
+
+    <div class="rodape-artigo">
+      <Partilha titulo={d.titulo} />
+      <a class="botao secundario" href={u('/participar/')}>Comentar ou enviar um testemunho</a>
+    </div>
+  </article>
+
+  {relacionadas.length > 0 && (
+    <section class="contentor relacionadas" aria-labelledby="t-rel">
+      <div class="titulo-bloco"><h2 id="t-rel">Continue a ler</h2><a href={u('/noticias/')}>Todas as notícias</a></div>
+      <div class="grelha">{relacionadas.map((x) => <CartaoNoticia n={x} />)}</div>
+    </section>
+  )}
+</Base>
+
+<style>
+  .artigo { padding-top: 48px; }
+  .artigo-cabeca { max-width: 860px; margin: 0 auto 36px; text-align: center; }
+  .topo { display: flex; gap: 10px; justify-content: center; align-items: center; margin-bottom: 16px; }
+  h1 { font-size: clamp(36px, 5.6vw, 64px); line-height: 1.04; color: var(--navy); }
+  .resumo { font-family: var(--serif); font-style: italic; font-size: clamp(19px, 2.2vw, 24px); line-height: 1.4; color: #3b4150; margin: 20px auto 18px; max-width: 46ch; }
+  .meta { justify-content: center; }
+  .artigo-imagem { margin: 0 0 48px; }
+  .artigo-imagem figcaption { font-size: 14px; color: var(--muted); margin-top: 10px; }
+  .artigo-corpo { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 48px; max-width: 1000px; margin: 0 auto; }
+  .lateral :global(.partilha) { position: sticky; top: 24px; flex-direction: column; align-items: stretch; }
+  .lateral :global(.botao) { width: 100%; }
+  .rodape-artigo {
+    display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap;
+    max-width: 1000px; margin: 48px auto 0; padding: 24px 0 64px; border-top: 1px solid var(--rule);
+  }
+  .relacionadas { padding-bottom: 48px; }
+  .grelha { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+  @media (max-width: 900px) {
+    .artigo { padding-top: 28px; }
+    .artigo-corpo { grid-template-columns: minmax(0, 1fr); }
+    .lateral { display: none; }
+    .grelha { grid-template-columns: minmax(0, 1fr); }
+    .artigo-imagem { margin-bottom: 32px; }
+  }
+</style>

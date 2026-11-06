@@ -1,0 +1,60 @@
+---
+import Base from '../layouts/Base.astro';
+import { u, SECCOES, fmtData, fmtMesAno, anoLetivo, noticiasPublicadas } from '../lib/site';
+const noticias = await noticiasPublicadas();
+const anos = new Map<string, Map<string, typeof noticias>>();
+for (const n of noticias) {
+  const a = anoLetivo(n.data.data);
+  const m = fmtMesAno(n.data.data);
+  if (!anos.has(a)) anos.set(a, new Map());
+  const meses = anos.get(a)!;
+  meses.set(m, [...(meses.get(m) ?? []), n]);
+}
+---
+<Base titulo="Arquivo" descricao="Arquivo de todas as edições e notícias do Vox Aquilae, por ano letivo.">
+  <div class="contentor seccao-pagina">
+    <header class="cabecalho-pagina">
+      <span class="kicker">Desde setembro de 2013</span>
+      <h1>Arquivo</h1>
+      <p>Todas as notícias, organizadas por ano letivo e por mês.</p>
+    </header>
+    {[...anos.entries()].map(([ano, meses], i) => (
+      <details class="ano" open={i === 0}>
+        <summary><h2>Ano letivo {ano}</h2><span>{[...meses.values()].flat().length} artigos</span></summary>
+        {[...meses.entries()].map(([mes, lista]) => (
+          <section class="mes">
+            <h3>{mes}</h3>
+            <ul>
+              {lista.map((n) => (
+                <li>
+                  <time datetime={n.data.data.toISOString().slice(0, 10)}>{fmtData(n.data.data)}</time>
+                  <a href={u(`/noticias/${n.id}/`)}>{n.data.titulo}</a>
+                  <span class="seccao">{SECCOES[n.data.seccao].nome}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </details>
+    ))}
+  </div>
+</Base>
+
+<style>
+  .ano { border-top: 3px solid var(--navy); margin-bottom: 24px; }
+  summary { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 14px 0; cursor: pointer; list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+  summary h2 { font-size: 30px; color: var(--navy); }
+  summary h2::before { content: '+ '; color: var(--gold); }
+  .ano[open] summary h2::before { content: '− '; }
+  summary span { color: var(--muted); font-size: 14px; }
+  .mes { margin: 8px 0 28px; }
+  h3 { font-family: var(--sans); font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--gold-texto); margin-bottom: 8px; }
+  ul { list-style: none; margin: 0; padding: 0; }
+  li { display: grid; grid-template-columns: 170px minmax(0, 1fr) auto; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--rule); align-items: baseline; }
+  time { color: var(--muted); font-size: 14px; }
+  li a { font-family: var(--serif); font-size: 20px; font-weight: 600; color: var(--navy); text-decoration: none; }
+  li a:hover { text-decoration: underline; }
+  .seccao { font-size: 13px; color: var(--muted); }
+  @media (max-width: 700px) { li { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
+</style>

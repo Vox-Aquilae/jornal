@@ -1,0 +1,84 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Partilha from '../../components/Partilha.astro';
+import { u, galeriasOrdenadas, fmtData, temValor } from '../../lib/site';
+
+export async function getStaticPaths() {
+  return (await galeriasOrdenadas()).map((a) => ({ params: { id: a.id }, props: { a } }));
+}
+const { a } = Astro.props;
+const d = a.data;
+const { Content } = await render(a);
+---
+<Base titulo={d.titulo} descricao={d.resumo ?? `Galeria: ${d.titulo}`} imagem={d.capa || d.fotos[0]?.imagem}>
+  <div class="contentor seccao-pagina">
+    <header class="cabecalho-pagina">
+      <a class="kicker" href={u('/galeria/')}>← Galeria</a>
+      <h1>{d.titulo}</h1>
+      {temValor(d.resumo) && <p>{d.resumo}</p>}
+      <div class="meta linha"><span>{fmtData(d.data)}</span><span>{d.fotos.length} fotografias</span>{d.exemplo && <span class="selo-exemplo">Exemplo</span>}</div>
+    </header>
+    {a.body?.trim() && <div class="prosa intro"><Content /></div>}
+
+    <ul class="fotos">
+      {d.fotos.map((f, i) => (
+        <li>
+          <button type="button" class="foto" data-i={i} aria-label={`Ampliar fotografia ${i + 1}${f.legenda ? ': ' + f.legenda : ''}`}>
+            <img src={u(f.imagem)} alt={f.legenda ?? ''} loading="lazy" decoding="async" />
+          </button>
+          {temValor(f.legenda) && <p class="legenda">{f.legenda}</p>}
+        </li>
+      ))}
+    </ul>
+    <div class="partilhar"><Partilha titulo={d.titulo} /></div>
+  </div>
+
+  <dialog class="caixa" aria-label="Fotografia ampliada">
+    <img alt="" />
+    <p class="legenda-caixa"></p>
+    <div class="controlos">
+      <button type="button" class="botao secundario" data-ant aria-label="Fotografia anterior">←</button>
+      <button type="button" class="botao" data-fechar>Fechar</button>
+      <button type="button" class="botao secundario" data-seg aria-label="Fotografia seguinte">→</button>
+    </div>
+  </dialog>
+</Base>
+
+<script>
+  const caixa = document.querySelector<HTMLDialogElement>('dialog.caixa')!;
+  const img = caixa.querySelector('img')!;
+  const leg = caixa.querySelector('.legenda-caixa')!;
+  const fotos = [...document.querySelectorAll<HTMLButtonElement>('.foto')];
+  let atual = 0;
+  const mostrar = (i: number) => {
+    atual = (i + fotos.length) % fotos.length;
+    const f = fotos[atual].querySelector('img')!;
+    img.src = f.src; img.alt = f.alt; leg.textContent = f.alt;
+  };
+  fotos.forEach((b, i) => b.addEventListener('click', () => { mostrar(i); caixa.showModal(); }));
+  caixa.querySelector('[data-fechar]')!.addEventListener('click', () => caixa.close());
+  caixa.querySelector('[data-ant]')!.addEventListener('click', () => mostrar(atual - 1));
+  caixa.querySelector('[data-seg]')!.addEventListener('click', () => mostrar(atual + 1));
+  caixa.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') mostrar(atual - 1);
+    if (e.key === 'ArrowRight') mostrar(atual + 1);
+  });
+</script>
+
+<style>
+  .linha { margin-top: 16px; }
+  .intro { margin-bottom: 40px; }
+  .fotos { list-style: none; margin: 0 0 40px; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  .foto { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; border-radius: var(--raio); overflow: hidden; }
+  .foto img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; transition: transform .4s; }
+  .foto:hover img { transform: scale(1.03); }
+  .legenda { font-size: 14px; color: var(--muted); margin: 8px 0 0; }
+  .caixa { border: 0; padding: 16px; background: var(--ink); color: #fff; max-width: min(1100px, 96vw); width: 100%; border-radius: 8px; }
+  .caixa::backdrop { background: rgba(10, 14, 24, .85); }
+  .caixa img { width: 100%; max-height: 74vh; object-fit: contain; }
+  .legenda-caixa { text-align: center; margin: 12px 0; color: #d8dce6; min-height: 1.5em; }
+  .controlos { display: flex; justify-content: center; gap: 10px; }
+  .caixa .botao.secundario { color: #fff; border-color: rgba(255,255,255,.4); }
+  .caixa .botao { background: transparent; border-color: rgba(255,255,255,.4); }
+</style>

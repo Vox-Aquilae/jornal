@@ -1,0 +1,88 @@
+---
+import Logo from './Logo.astro';
+import { u, site, SECCOES } from '../lib/site';
+interface Props { masthead?: boolean }
+const { masthead = false } = Astro.props;
+
+const caminho = Astro.url.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ''), '') || '/';
+const itens = [
+  { href: '/noticias/', nome: 'Notícias' },
+  ...Object.entries(SECCOES).map(([id, s]) => ({ href: `/seccao/${id}/`, nome: s.nome })),
+  { href: '/vozes/', nome: 'Vozes' },
+  { href: '/agenda/', nome: 'Agenda' },
+  { href: '/galeria/', nome: 'Galeria' },
+];
+const ativo = (href: string) => caminho.replace(/\.html$/, '/').startsWith(href.replace(/\/$/, ''));
+---
+<header class:list={['cabecalho', { masthead }]}>
+  <div class="contentor faixa">
+    <span data-hoje>{site.ano_letivo && `Ano letivo ${site.ano_letivo}`}</span>
+    <span class="lema">{site.lema_do_ano}</span>
+    <span>Colégio Planalto · Lisboa</span>
+  </div>
+  <div class="contentor marca">
+    <a href={u('/')} class="marca-link" aria-label="Vox Aquilae — página inicial">
+      <Logo assinatura={masthead} />
+    </a>
+  </div>
+  <div class="contentor">
+    <div class="regua"></div>
+  </div>
+  <nav class="contentor nav" aria-label="Secções do jornal">
+    <ul>
+      {itens.map((i) => (
+        <li><a href={u(i.href)} aria-current={ativo(i.href) ? 'page' : undefined}>{i.nome}</a></li>
+      ))}
+    </ul>
+    <a class="pesquisa" href={u('/pesquisa/')} aria-label="Pesquisar no jornal">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+    </a>
+  </nav>
+</header>
+
+<script>
+  const el = document.querySelector('[data-hoje]');
+  if (el) {
+    const hoje = new Intl.DateTimeFormat('pt-PT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date());
+    el.textContent = hoje.charAt(0).toUpperCase() + hoje.slice(1);
+  }
+</script>
+
+<style>
+  .cabecalho { background: var(--paper); }
+  .faixa {
+    display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    font-size: 13px; letter-spacing: 0.02em; color: var(--muted); padding-top: 14px; padding-bottom: 10px;
+  }
+  .faixa .lema { font-family: var(--serif); font-style: italic; font-size: 15px; color: var(--navy); }
+  .marca { display: flex; justify-content: center; padding-top: 6px; padding-bottom: 14px; border-top: 1px solid var(--rule); }
+  .marca-link { display: block; width: min(300px, 70vw); padding-top: 10px; color: var(--navy); }
+  .masthead .marca-link { width: min(560px, 88vw); padding-top: 22px; }
+  .marca-link:hover { color: var(--navy); }
+  .regua { border-top: 3px solid var(--navy); height: 6px; border-bottom: 1px solid var(--navy); }
+  .nav { display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--rule); }
+  .nav ul {
+    list-style: none; margin: 0; padding: 0; display: flex; gap: 4px 26px; flex: 1; min-width: 0;
+    overflow-x: auto; scrollbar-width: none; justify-content: center;
+  }
+  .nav ul::-webkit-scrollbar { display: none; }
+  .nav li { flex: none; }
+  .nav ul a {
+    display: inline-flex; align-items: center; min-height: 50px; font-size: 15px; font-weight: 600; letter-spacing: 0.01em;
+    color: var(--navy); text-decoration: none; border-bottom: 3px solid transparent; margin-bottom: -1px;
+  }
+  .nav ul a:hover { color: var(--gold-texto); }
+  .nav ul a[aria-current='page'] { border-bottom-color: var(--gold); }
+  .pesquisa { flex: none; display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; color: var(--navy); }
+  .pesquisa:hover { background: var(--paper-2); color: var(--navy); }
+  .pesquisa svg { width: 20px; height: 20px; }
+
+  @media (max-width: 900px) {
+    .nav ul { justify-content: flex-start; mask-image: linear-gradient(90deg, #000 85%, transparent); padding-right: 24px; }
+  }
+  @media (max-width: 640px) {
+    .faixa { justify-content: center; }
+    .faixa > span:not(.lema) { display: none; }
+    .masthead .marca-link { padding-top: 12px; }
+  }
+</style>

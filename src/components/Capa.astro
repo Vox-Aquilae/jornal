@@ -1,0 +1,36 @@
+---
+import Emblema from './Emblema.astro';
+import { u, SECCOES, temValor } from '../lib/site';
+interface Props { imagem?: string | null; alt?: string | null; seccao: string; proporcao?: string; prioridade?: boolean }
+const { imagem, alt, seccao, proporcao = '16 / 10', prioridade = false } = Astro.props;
+const s = SECCOES[seccao] ?? SECCOES['vida-do-colegio'];
+---
+{temValor(imagem) ? (
+  <img
+    class="capa"
+    src={u(imagem!)}
+    alt={alt ?? ''}
+    loading={prioridade ? 'eager' : 'lazy'}
+    decoding="async"
+    style={`aspect-ratio: ${proporcao}`}
+  />
+) : (
+  <div class="capa capa-tipo" style={`aspect-ratio: ${proporcao}; --cor: ${s.cor}`} aria-hidden="true">
+    <Emblema class="marca-agua" arcos={false} />
+    <span class="rotulo">{s.nome}</span>
+  </div>
+)}
+
+<style>
+  .capa { width: 100%; object-fit: cover; border-radius: var(--raio); background: var(--paper-2); }
+  .capa-tipo {
+    position: relative; overflow: hidden; display: flex; align-items: flex-end; padding: 6%;
+    background:
+      radial-gradient(circle at 85% 20%, rgba(255,255,255,.08) 0 30%, transparent 30.2%),
+      var(--cor);
+    color: #fff;
+  }
+  .capa-tipo :global(.marca-agua) { position: absolute; right: -8%; bottom: -14%; width: 62%; color: rgba(255,255,255,.11); }
+  .rotulo { position: relative; font-family: var(--serif); font-style: italic; font-size: clamp(18px, 2.4vw, 30px); line-height: 1; }
+  .rotulo::before { content: ''; display: block; width: 36px; height: 3px; background: var(--gold-claro); margin-bottom: 12px; }
+</style>

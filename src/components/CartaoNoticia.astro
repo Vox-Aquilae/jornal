@@ -1,0 +1,45 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Capa from './Capa.astro';
+import { u, SECCOES, fmtData } from '../lib/site';
+interface Props { n: CollectionEntry<'noticias'>; variante?: 'manchete' | 'normal' | 'lista'; prioridade?: boolean }
+const { n, variante = 'normal', prioridade = false } = Astro.props;
+const d = n.data;
+const href = u(`/noticias/${n.id}/`);
+const s = SECCOES[d.seccao];
+---
+<article class:list={['cartao', variante]}>
+  {variante !== 'lista' && (
+    <a href={href} class="cartao-capa" tabindex="-1" aria-hidden="true">
+      <Capa imagem={d.imagem} alt={d.legenda} seccao={d.seccao} proporcao={variante === 'manchete' ? '16 / 9' : '16 / 10'} prioridade={prioridade} />
+    </a>
+  )}
+  <div class="cartao-texto">
+    <div class="topo">
+      <a class="kicker" href={u(`/seccao/${d.seccao}/`)}>{s?.nome}</a>
+      {d.exemplo && <span class="selo-exemplo">Exemplo</span>}
+    </div>
+    {variante === 'manchete'
+      ? <h2 class="titulo"><a href={href}>{d.titulo}</a></h2>
+      : <h3 class="titulo"><a href={href}>{d.titulo}</a></h3>}
+    {variante !== 'lista' && <p class="resumo">{d.resumo}</p>}
+    <div class="meta"><span>{fmtData(d.data)}</span>{variante === 'manchete' && <span>{d.autor}</span>}</div>
+  </div>
+</article>
+
+<style>
+  .cartao { display: flex; flex-direction: column; gap: 16px; }
+  .cartao-capa { display: block; overflow: hidden; border-radius: var(--raio); }
+  .cartao-capa :global(.capa) { transition: transform .5s ease; }
+  .cartao:hover .cartao-capa :global(.capa) { transform: scale(1.025); }
+  .topo { display: flex; gap: 10px; align-items: center; margin-bottom: 8px; }
+  .titulo { font-size: 23px; color: var(--navy); }
+  .titulo a { text-decoration: none; }
+  .titulo a:hover { color: var(--navy); text-decoration: underline; text-decoration-thickness: 2px; }
+  .resumo { margin: 10px 0 12px; color: #3b4150; font-size: 16px; }
+  .manchete .titulo { font-size: clamp(32px, 4.2vw, 50px); line-height: 1.05; }
+  .manchete .resumo { font-size: 19px; max-width: 58ch; }
+  .lista { padding: 18px 0; border-top: 1px solid var(--rule); gap: 0; }
+  .lista:first-child { border-top: 0; padding-top: 0; }
+  .lista .titulo { font-size: 21px; margin-bottom: 8px; }
+</style>

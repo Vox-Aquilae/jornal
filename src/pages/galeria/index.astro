@@ -1,0 +1,35 @@
+---
+import Base from '../../layouts/Base.astro';
+import Capa from '../../components/Capa.astro';
+import { u, galeriasOrdenadas, fmtData } from '../../lib/site';
+const albuns = await galeriasOrdenadas();
+---
+<Base titulo="Galeria" descricao="Reportagens fotográficas do Colégio Planalto.">
+  <div class="contentor seccao-pagina">
+    <header class="cabecalho-pagina">
+      <span class="kicker">Galeria</span>
+      <h1>Reportagens fotográficas</h1>
+      <p>Os momentos do ano, em imagens. Só publicamos fotografias de alunos com autorização das famílias.</p>
+    </header>
+    {albuns.length ? (
+      <div class="grelha">
+        {albuns.map((a) => (
+          <a class="album" href={u(`/galeria/${a.id}/`)}>
+            <Capa imagem={a.data.capa || a.data.fotos[0]?.imagem} alt="" seccao="cultura" proporcao="4 / 3" />
+            <h2>{a.data.titulo} {a.data.exemplo && <span class="selo-exemplo">Exemplo</span>}</h2>
+            <p class="meta"><span>{fmtData(a.data.data)}</span><span>{a.data.fotos.length} fotografias</span></p>
+          </a>
+        ))}
+      </div>
+    ) : <p class="vazio">Ainda não há galerias publicadas.</p>}
+  </div>
+</Base>
+
+<style>
+  .grelha { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px 28px; }
+  .album { text-decoration: none; display: block; }
+  h2 { font-size: 22px; color: var(--navy); margin: 14px 0 6px; }
+  .album:hover h2 { text-decoration: underline; }
+  @media (max-width: 980px) { .grelha { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { .grelha { grid-template-columns: minmax(0, 1fr); } }
+</style>

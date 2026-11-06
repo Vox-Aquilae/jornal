@@ -1,0 +1,15 @@
+---
+import { EMBLEMA } from '../lib/emblem';
+interface Props { arcos?: boolean; class?: string; decorativo?: boolean }
+const { arcos = true, class: cls = '', decorativo = true } = Astro.props;
+---
+<svg class={`emblema ${cls}`} viewBox="0 0 240 240" aria-hidden={decorativo ? 'true' : undefined} role={decorativo ? undefined : 'img'} aria-label={decorativo ? undefined : 'Vox Aquilae'}>
+  <g transform={arcos ? 'translate(30.4 46.4) scale(0.804)' : 'translate(23.7 23.7) scale(0.948)'}><path d={EMBLEMA} fill="currentColor"></path></g>
+  {arcos && <path d="M140.4,40.5 A92,92 0 0 1 197.3,93.5" class="arco"></path>}
+  {arcos && <path d="M151.7,29.7 A106,106 0 0 1 203.8,75" class="arco" opacity="0.6"></path>}
+</svg>
+
+<style>
+  .emblema { display: block; }
+  .arco { fill: none; stroke: var(--gold); stroke-width: 6; stroke-linecap: round; }
+</style>
