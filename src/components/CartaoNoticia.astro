@@ -1,45 +1,44 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import Capa from './Capa.astro';
-import { u, SECCOES, fmtData } from '../lib/site';
-interface Props { n: CollectionEntry<'noticias'>; variante?: 'manchete' | 'normal' | 'lista'; prioridade?: boolean }
-const { n, variante = 'normal', prioridade = false } = Astro.props;
+import { u, fmtData, nomeDisciplina, slug, temValor } from '../lib/site';
+interface Props { n: CollectionEntry<'noticias'>; grande?: boolean; prioridade?: boolean }
+const { n, grande = false, prioridade = false } = Astro.props;
 const d = n.data;
 const href = u(`/noticias/${n.id}/`);
-const s = SECCOES[d.seccao];
+const disc = nomeDisciplina(d.disciplina);
 ---
-<article class:list={['cartao', variante]}>
-  {variante !== 'lista' && (
-    <a href={href} class="cartao-capa" tabindex="-1" aria-hidden="true">
-      <Capa imagem={d.imagem} alt={d.legenda} seccao={d.seccao} proporcao={variante === 'manchete' ? '16 / 9' : '16 / 10'} prioridade={prioridade} />
-    </a>
-  )}
-  <div class="cartao-texto">
-    <div class="topo">
-      <a class="kicker" href={u(`/seccao/${d.seccao}/`)}>{s?.nome}</a>
+<article class:list={['cartao', { grande }]}>
+  <a href={href} class="imagem" tabindex="-1" aria-hidden="true">
+    <Capa imagem={d.imagem} alt={d.legenda} rotulo={disc} proporcao={grande ? '16 / 10' : '3 / 2'} prioridade={prioridade} />
+  </a>
+  <div class="texto">
+    <div class="sobre">
+      <a class="etiqueta" href={u(`/disciplina/${d.disciplina}/`)}>{disc}</a>
+      {temValor(d.turmas) && <span class="turmas">{d.turmas}</span>}
       {d.exemplo && <span class="selo-exemplo">Exemplo</span>}
     </div>
-    {variante === 'manchete'
-      ? <h2 class="titulo"><a href={href}>{d.titulo}</a></h2>
-      : <h3 class="titulo"><a href={href}>{d.titulo}</a></h3>}
-    {variante !== 'lista' && <p class="resumo">{d.resumo}</p>}
-    <div class="meta"><span>{fmtData(d.data)}</span>{variante === 'manchete' && <span>{d.autor}</span>}</div>
+    {grande ? <h2><a href={href}>{d.titulo}</a></h2> : <h3><a href={href}>{d.titulo}</a></h3>}
+    <p class="resumo">{d.resumo}</p>
+    <p class="meta"><a href={u(`/professor/${slug(d.professor)}/`)}>{d.professor}</a><time datetime={d.data.toISOString().slice(0, 10)}>{fmtData(d.data)}</time></p>
   </div>
 </article>
 
 <style>
-  .cartao { display: flex; flex-direction: column; gap: 16px; }
-  .cartao-capa { display: block; overflow: hidden; border-radius: var(--raio); }
-  .cartao-capa :global(.capa) { transition: transform .5s ease; }
-  .cartao:hover .cartao-capa :global(.capa) { transform: scale(1.025); }
-  .topo { display: flex; gap: 10px; align-items: center; margin-bottom: 8px; }
-  .titulo { font-size: 23px; color: var(--navy); }
-  .titulo a { text-decoration: none; }
-  .titulo a:hover { color: var(--navy); text-decoration: underline; text-decoration-thickness: 2px; }
-  .resumo { margin: 10px 0 12px; color: #3b4150; font-size: 16px; }
-  .manchete .titulo { font-size: clamp(32px, 4.2vw, 50px); line-height: 1.05; }
-  .manchete .resumo { font-size: 19px; max-width: 58ch; }
-  .lista { padding: 18px 0; border-top: 1px solid var(--rule); gap: 0; }
-  .lista:first-child { border-top: 0; padding-top: 0; }
-  .lista .titulo { font-size: 21px; margin-bottom: 8px; }
+  .cartao { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+  .imagem { display: block; overflow: hidden; text-decoration: none; border-radius: var(--raio); }
+  .imagem :global(.capa) { transition: transform .4s ease; }
+  .cartao:hover .imagem :global(.capa) { transform: scale(1.02); }
+  .sobre { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-bottom: 8px; }
+  .turmas { font-size: 13px; color: var(--suave); }
+  h3 { font-size: 22px; }
+  h2 { font-size: clamp(30px, 3.8vw, 44px); line-height: 1.06; }
+  h2 a, h3 a { text-decoration: none; }
+  h2 a:hover, h3 a:hover { text-decoration: underline; text-decoration-thickness: 2px; }
+  .resumo { margin: 10px 0 12px; color: #3b4252; font-size: 16px; }
+  .meta { margin: 0; }
+  .grande { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 40px; align-items: center; }
+  .grande .resumo { font-size: 18.5px; }
+  @media (prefers-reduced-motion: reduce) { .imagem :global(.capa) { transition: none; } }
+  @media (max-width: 860px) { .grande { grid-template-columns: minmax(0, 1fr); gap: 18px; } }
 </style>

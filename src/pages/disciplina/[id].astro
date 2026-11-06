@@ -1,0 +1,24 @@
+---
+import Base from '../../layouts/Base.astro';
+import ListaNoticias from '../../components/ListaNoticias.astro';
+import { DISCIPLINAS, noticiasPublicadas } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const todas = await noticiasPublicadas();
+  return Object.entries(DISCIPLINAS).map(([id, nome]) => ({
+    params: { id },
+    props: { nome, lista: todas.filter((n) => n.data.disciplina === id) },
+  }));
+}
+const { id } = Astro.params;
+const { nome, lista } = Astro.props;
+const professores = [...new Set(lista.map((n) => n.data.professor))];
+---
+<Base titulo={nome} descricao={`Publicações de ${nome} no Vox Aquilae, o jornal do Colégio Planalto.`} ativa={id}>
+  <ListaNoticias
+    lista={lista}
+    etiqueta="Disciplina"
+    titulo={nome}
+    subtitulo={lista.length ? `${lista.length} publicaç${lista.length === 1 ? 'ão' : 'ões'} · ${professores.join(', ')}` : undefined}
+  />
+</Base>

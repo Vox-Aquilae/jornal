@@ -2,9 +2,10 @@
 titulo: Arranca o Concurso de Oratória do 3.º ciclo
 resumo: Inspirado nos colégios Fomento de Espanha, o concurso percorre todo o 1.º período e termina com a final no Dia do Colégio, a 23 de janeiro.
 data: 2026-09-30
-seccao: formacao
-autor: Redação Vox Aquilae
-destaque: true
+disciplina: portugues
+professor: "[Nome do professor de Português]"
+turmas: 7.º, 8.º e 9.º anos
+
 exemplo: true
 ---
 

@@ -1,0 +1,41 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import CartaoNoticia from './CartaoNoticia.astro';
+import { u } from '../lib/site';
+interface Props {
+  lista: CollectionEntry<'noticias'>[];
+  titulo?: string;
+  subtitulo?: string;
+  etiqueta?: string;
+  destaque?: boolean;
+  anterior?: string;
+  seguinte?: string;
+}
+const { lista, titulo, subtitulo, etiqueta, destaque = false, anterior, seguinte } = Astro.props;
+const primeira = destaque ? lista[0] : undefined;
+const resto = destaque ? lista.slice(1) : lista;
+---
+<div class="contentor">
+  {titulo && (
+    <header class="titulo-lista">
+      <div>
+        {etiqueta && <span class="etiqueta">{etiqueta}</span>}
+        <h1>{titulo}</h1>
+        {subtitulo && <p>{subtitulo}</p>}
+      </div>
+    </header>
+  )}
+  {lista.length === 0 && <p class="vazio">Ainda não há publicações aqui.</p>}
+  {primeira && <section class="abertura" aria-label="Publicação mais recente"><CartaoNoticia n={primeira} grande prioridade /></section>}
+  {resto.length > 0 && <div class="grelha">{resto.map((n, i) => <CartaoNoticia n={n} prioridade={!primeira && i < 3} />)}</div>}
+  {(anterior || seguinte) && (
+    <nav class="paginacao" aria-label="Páginas">
+      {anterior ? <a class="botao" href={u(anterior)}>← Mais recentes</a> : <span></span>}
+      {seguinte && <a class="botao" href={u(seguinte)}>Mais antigas →</a>}
+    </nav>
+  )}
+</div>
+
+<style>
+  .abertura { padding: 40px 0 48px; margin-bottom: 44px; border-bottom: 1px solid var(--filete); }
+</style>

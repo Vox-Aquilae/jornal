@@ -10,15 +10,14 @@ import { u } from '../lib/site';
     <p>A ligação pode estar errada ou a notícia foi retirada.</p>
     <div class="acoes">
       <a class="botao" href={u('/')}>Voltar à primeira página</a>
-      <a class="botao secundario" href={u('/pesquisa/')}>Pesquisar</a>
     </div>
   </div>
 </Base>
 
 <style>
   .nao-encontrada { text-align: center; padding: 72px 16px 96px; }
-  .nao-encontrada :global(.emb) { width: 120px; margin: 0 auto 24px; color: var(--navy); }
-  h1 { font-size: clamp(36px, 6vw, 56px); color: var(--navy); }
-  p { color: var(--muted); margin: 14px 0 28px; font-size: 18px; }
+  .nao-encontrada :global(.emb) { width: 120px; margin: 0 auto 24px; color: var(--azul); }
+  h1 { font-size: clamp(36px, 6vw, 56px); color: var(--azul); }
+  p { color: var(--suave); margin: 14px 0 28px; font-size: 18px; }
   .acoes { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 </style>

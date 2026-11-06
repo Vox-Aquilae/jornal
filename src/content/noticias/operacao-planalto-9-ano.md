@@ -2,8 +2,9 @@
 titulo: "Operação Planalto: o 9.º ano entra na investigação"
 resumo: Um projeto interdisciplinar de um trimestre põe os alunos na pele de investigadores forenses, a cruzar ciências, matemática e escrita para resolver um caso.
 data: 2026-09-22
-seccao: ciencia
-autor: Redação Vox Aquilae
+disciplina: ciencias-naturais
+professor: "[Nome do professor de Ciências Naturais]"
+turmas: 9.º ano
 exemplo: true
 ---
 

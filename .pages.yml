@@ -8,22 +8,21 @@ media:
   categories: [image]
 
 content:
-  # ───────────── NOTÍCIAS ─────────────
   - name: noticias
-    label: Notícias
+    label: Publicações
     type: collection
     path: src/content/noticias
     filename:
       template: "{primary}.md"
       field: create
     view:
-      fields: [titulo, data, seccao, destaque, rascunho]
+      fields: [titulo, disciplina, professor, data, rascunho]
       primary: titulo
       sort: [data, titulo]
       default:
         sort: data
         order: desc
-      search: [titulo, resumo]
+      search: [titulo, resumo, professor]
     fields:
       - name: titulo
         label: Título
@@ -31,57 +30,78 @@ content:
         required: true
         description: Curto e claro. Idealmente até 80 caracteres.
       - name: resumo
-        label: Resumo (lead)
+        label: Resumo
         type: text
         required: true
-        description: Uma ou duas frases. Aparece na capa, nas pesquisas e quando a notícia é partilhada no WhatsApp.
+        description: Uma ou duas frases. Aparece na lista de publicações e quando o texto é partilhado no WhatsApp.
+      - name: disciplina
+        label: Disciplina
+        type: select
+        required: true
+        options:
+          values:
+            - name: colegio
+              label: Colégio (geral)
+            - name: portugues
+              label: Português
+            - name: ingles
+              label: Inglês
+            - name: frances
+              label: Francês
+            - name: espanhol
+              label: Espanhol
+            - name: historia
+              label: História
+            - name: geografia
+              label: Geografia
+            - name: matematica
+              label: Matemática
+            - name: ciencias-naturais
+              label: Ciências Naturais
+            - name: fisico-quimica
+              label: Físico-Química
+            - name: educacao-visual
+              label: Educação Visual
+            - name: tic
+              label: TIC
+            - name: educacao-fisica
+              label: Educação Física
+            - name: musica
+              label: Música
+            - name: emrc
+              label: EMRC
+            - name: cidadania
+              label: Cidadania
+      - name: professor
+        label: Professor
+        type: string
+        required: true
+        description: "Escreva o nome sempre da mesma forma (ex.: «Prof. João Silva»): é assim que o site junta as publicações de cada professor."
+      - name: turmas
+        label: Ano / turmas (opcional)
+        type: string
+        description: "Ex.: «8.º B» ou «9.º ano»."
       - name: data
         label: Data
         type: date
         required: true
         options:
           format: yyyy-MM-dd
-      - name: seccao
-        label: Secção
-        type: select
-        required: true
-        options:
-          values:
-            - name: vida-do-colegio
-              label: Vida do Colégio
-            - name: desporto
-              label: Desporto
-            - name: ciencia
-              label: Ciência
-            - name: cultura
-              label: Cultura
-            - name: formacao
-              label: Formação
-            - name: opiniao
-              label: Opinião
-      - name: autor
-        label: Autor(es)
-        type: string
-        default: Redação Vox Aquilae
-        description: "Ex.: «Tomás M., 8.º B». Use só o primeiro nome e a inicial do apelido."
       - name: imagem
-        label: Imagem principal
+        label: Imagem principal (opcional)
         type: image
-        description: Horizontal, de preferência 1600 px de largura. Só com alunos que têm autorização de imagem.
+        description: Horizontal. Só com alunos que têm autorização de imagem. Sem imagem, o site mostra uma capa com o nome da disciplina.
       - name: legenda
-        label: Legenda / descrição da imagem
+        label: Descrição da imagem
         type: string
-        description: Descreva a imagem (ajuda quem usa leitores de ecrã).
       - name: destaque
-        label: Manchete da capa
+        label: Destaque no topo da página inicial
         type: boolean
         default: false
-        description: A notícia mais recente marcada como manchete aparece em grande no topo da capa.
       - name: rascunho
         label: Rascunho (não publicar)
         type: boolean
         default: false
-        description: Enquanto estiver ativo, a notícia não aparece no site.
       - name: exemplo
         label: Conteúdo de exemplo
         type: boolean
@@ -91,197 +111,6 @@ content:
         label: Texto
         type: rich-text
 
-  # ───────────── VOZES (testemunhos) ─────────────
-  - name: vozes
-    label: Vozes (testemunhos)
-    type: collection
-    path: src/content/vozes
-    filename:
-      template: "{year}-{month}-{day}-{primary}.md"
-      field: false
-    view:
-      fields: [nome, papel, data, destaque]
-      primary: nome
-      sort: [data, nome]
-      default:
-        sort: data
-        order: desc
-    fields:
-      - name: nome
-        label: Nome a mostrar
-        type: string
-        required: true
-        description: "Alunos: primeiro nome e inicial (ex.: «João P.»). Só publicar com consentimento."
-      - name: papel
-        label: Quem é
-        type: select
-        required: true
-        options:
-          values:
-            - name: aluno
-              label: Aluno
-            - name: familia
-              label: Família (pai, mãe, avós)
-            - name: professor
-              label: Professor
-            - name: antigo-aluno
-              label: Antigo aluno
-      - name: detalhe
-        label: Detalhe
-        type: string
-        description: "Ex.: «9.º ano», «Mãe de alunos do 7.º ano», «Professor de Ciências»."
-      - name: citacao
-        label: Frase principal
-        type: text
-        required: true
-        description: A frase que aparece em destaque. Sem aspas.
-      - name: data
-        label: Data
-        type: date
-        required: true
-        options:
-          format: yyyy-MM-dd
-      - name: foto
-        label: Fotografia (opcional)
-        type: image
-      - name: destaque
-        label: Mostrar na capa
-        type: boolean
-        default: false
-      - name: exemplo
-        label: Conteúdo de exemplo
-        type: boolean
-        default: false
-        hidden: true
-      - name: body
-        label: Testemunho completo (opcional)
-        type: rich-text
-
-  # ───────────── AGENDA ─────────────
-  - name: agenda
-    label: Agenda
-    type: collection
-    path: src/content/agenda
-    filename:
-      template: "{fields.data}-{primary}.md"
-      field: false
-    view:
-      fields: [titulo, data, publico]
-      primary: titulo
-      sort: [data]
-      default:
-        sort: data
-        order: desc
-    fields:
-      - name: titulo
-        label: Evento
-        type: string
-        required: true
-      - name: data
-        label: Data
-        type: date
-        required: true
-        options:
-          format: yyyy-MM-dd
-      - name: hora
-        label: Hora
-        type: string
-        description: "Ex.: 14:30"
-      - name: local
-        label: Local
-        type: string
-      - name: publico
-        label: Para quem
-        type: select
-        default: Todos
-        options:
-          values: [Todos, Alunos, Famílias, Professores]
-      - name: descricao
-        label: Descrição curta
-        type: text
-      - name: exemplo
-        label: Conteúdo de exemplo
-        type: boolean
-        default: false
-        hidden: true
-
-  # ───────────── GALERIA ─────────────
-  - name: galeria
-    label: Galeria
-    type: collection
-    path: src/content/galeria
-    filename:
-      template: "{primary}.md"
-      field: create
-    view:
-      fields: [titulo, data]
-      primary: titulo
-      sort: [data]
-      default:
-        sort: data
-        order: desc
-    fields:
-      - name: titulo
-        label: Título do álbum
-        type: string
-        required: true
-      - name: data
-        label: Data
-        type: date
-        required: true
-        options:
-          format: yyyy-MM-dd
-      - name: resumo
-        label: Resumo
-        type: text
-      - name: capa
-        label: Imagem de capa
-        type: image
-      - name: fotos
-        label: Fotografias
-        type: object
-        list:
-          collapsible:
-            collapsed: true
-            summary: "{fields.legenda}"
-        fields:
-          - name: imagem
-            label: Fotografia
-            type: image
-            required: true
-          - name: legenda
-            label: Legenda
-            type: string
-      - name: exemplo
-        label: Conteúdo de exemplo
-        type: boolean
-        default: false
-        hidden: true
-      - name: body
-        label: Texto de introdução (opcional)
-        type: rich-text
-
-  # ───────────── PÁGINAS FIXAS ─────────────
-  - name: paginas
-    label: Páginas fixas
-    type: collection
-    path: src/content/paginas
-    view:
-      fields: [titulo]
-      primary: titulo
-    fields:
-      - name: titulo
-        label: Título
-        type: string
-        required: true
-      - name: resumo
-        label: Subtítulo
-        type: text
-      - name: body
-        label: Texto
-        type: rich-text
-
-  # ───────────── DEFINIÇÕES ─────────────
   - name: definicoes
     label: Definições do site
     type: file
@@ -292,30 +121,8 @@ content:
         label: Nome do jornal
         type: string
       - name: descricao
-        label: Descrição (aparece no Google e no rodapé)
+        label: Descrição (aparece no Google e nas partilhas)
         type: text
-      - name: lema_do_ano
-        label: Lema do ano
-        type: string
-      - name: ano_letivo
-        label: Ano letivo
-        type: string
-      - name: formulario_testemunhos
-        label: Ligação do formulário de testemunhos
-        type: string
-        description: Ligação para o Microsoft Forms ou Google Forms onde famílias e professores enviam testemunhos.
-      - name: canal_whatsapp
-        label: Ligação do canal de WhatsApp
-        type: string
-      - name: newsletter
-        label: Ligação de subscrição da newsletter
-        type: string
-      - name: email_redacao
-        label: Email da redação
-        type: string
-      - name: instagram
-        label: Instagram
-        type: string
       - name: site_colegio
-        label: Site do colégio
+        label: Endereço do site do colégio
         type: string

@@ -9,18 +9,17 @@ Site estático (Astro) com painel de edição (Pages CMS) e publicação automá
 3. *Settings → Pages → Source: GitHub Actions*.
 4. Abrir https://app.pagescms.org, entrar com a conta do jornal e abrir o repositório.
 
+Site publicado: https://vox-aquilae.github.io/jornal/
+
 O guia completo para a equipa (instalação, publicação, fluxo editorial, proteção de dados) está no documento partilhado «Vox Aquilae — Guia de instalação e publicação».
 
 ## Onde está cada coisa
 
 | Pasta / ficheiro | Conteúdo |
 | --- | --- |
-| `src/content/noticias/` | Notícias (uma por ficheiro .md) |
-| `src/content/vozes/` | Testemunhos de alunos, famílias e professores |
-| `src/content/agenda/` | Eventos |
-| `src/content/galeria/` | Reportagens fotográficas |
-| `src/content/paginas/` | Páginas fixas (Sobre, Participar) |
-| `src/data/site.json` | Definições: lema, ligações de WhatsApp, formulário, newsletter |
+| `src/content/noticias/` | Publicações (uma por ficheiro .md) |
+| `src/data/disciplinas.ts` | Lista de disciplinas (alterar também em `.pages.yml`) |
+| `src/data/site.json` | Definições: nome, descrição, endereço do site do colégio |
 | `public/media/` | Imagens carregadas pelo painel |
 | `.pages.yml` | Configuração do painel de edição |
 | `.github/workflows/publicar.yml` | Publicação automática (a cada alteração e diariamente às 05:00 UTC) |

@@ -4,8 +4,8 @@ import Cabecalho from '../components/Cabecalho.astro';
 import Rodape from '../components/Rodape.astro';
 import { u, site } from '../lib/site';
 
-interface Props { titulo?: string; descricao?: string; imagem?: string | null; masthead?: boolean; tipo?: 'website' | 'article' }
-const { titulo, descricao = site.descricao, imagem, masthead = false, tipo = 'website' } = Astro.props;
+interface Props { titulo?: string; descricao?: string; imagem?: string | null; ativa?: string; tipo?: 'website' | 'article' }
+const { titulo, descricao = site.descricao, imagem, ativa, tipo = 'website' } = Astro.props;
 const tituloCompleto = titulo ? `${titulo} — Vox Aquilae` : 'Vox Aquilae — Jornal do Colégio Planalto';
 const urlCanonico = new URL(Astro.url.pathname, Astro.site);
 const imagemOg = new URL(imagem && imagem.trim() ? u(imagem) : u('/og-vox-aquilae.png'), Astro.site);
@@ -21,7 +21,7 @@ const imagemOg = new URL(imagem && imagem.trim() ? u(imagem) : u('/og-vox-aquila
   <link rel="icon" href={u('/favicon.svg')} type="image/svg+xml" />
   <link rel="apple-touch-icon" href={u('/apple-touch-icon.png')} />
   <link rel="alternate" type="application/rss+xml" title="Vox Aquilae" href={u('/rss.xml')} />
-  <meta name="theme-color" content="#13213C" />
+  <meta name="theme-color" content="#14284B" />
   <meta property="og:site_name" content="Vox Aquilae" />
   <meta property="og:locale" content="pt_PT" />
   <meta property="og:type" content={tipo} />
@@ -33,7 +33,7 @@ const imagemOg = new URL(imagem && imagem.trim() ? u(imagem) : u('/og-vox-aquila
 </head>
 <body>
   <a class="salto" href="#conteudo">Saltar para o conteúdo</a>
-  <Cabecalho masthead={masthead} />
+  <Cabecalho ativa={ativa} />
   <main id="conteudo">
     <slot />
   </main>

@@ -2,8 +2,9 @@
 titulo: "Planalto Lens Challenge: «… e viu que tudo era bom»"
 resumo: O concurso de fotografia do 3.º ciclo desafia alunos e famílias a procurar o que é bom à sua volta e a registá-lo numa imagem.
 data: 2026-09-28
-seccao: cultura
-autor: Redação Vox Aquilae
+disciplina: educacao-visual
+professor: "[Nome do professor de Educação Visual]"
+turmas: 3.º ciclo
 exemplo: true
 ---
 

@@ -1,22 +1,21 @@
 ---
-titulo: O Vox Aquilae tem uma nova casa
-resumo: Treze anos depois da primeira edição, o jornal do Planalto passa a ser digital, com notícias atualizadas ao longo do ano e um espaço próprio para as vozes de alunos, famílias e professores.
-data: 2026-10-02
-seccao: vida-do-colegio
-autor: Redação Vox Aquilae
+titulo: O Vox Aquilae passa a ser o jornal das disciplinas
+resumo: Treze anos depois da primeira edição, o jornal do Planalto volta digital e mais simples. Cada disciplina publica aqui o que se faz nas aulas, contado por professores e alunos.
+data: 2026-11-06
+disciplina: colegio
+professor: Redação Vox Aquilae
+destaque: true
 exemplo: true
 ---
 
-O Vox Aquilae nasceu em setembro de 2013 com uma ideia simples: dar voz ao colégio. Treze anos depois, a ideia mantém-se — muda a forma.
+O Vox Aquilae nasceu em setembro de 2013 para dar voz ao colégio. A partir de agora, essa voz vem das salas de aula.
 
-A partir de agora, o jornal vive online. As notícias são publicadas à medida que as coisas acontecem, e não apenas em edições fechadas. Cada artigo pode ser partilhado por WhatsApp ou por email com um toque, para que as famílias acompanhem a vida do colégio onde quer que estejam.
+Cada disciplina passa a ter o seu espaço no jornal: um trabalho de grupo em Ciências, um texto premiado em Português, uma saída de campo em Geografia, um desafio de Matemática. Os professores publicam e, sempre que possível, dão a palavra aos alunos.
 
-## O que há de novo
+## Como ler
 
-- **Notícias por secção** — Vida do Colégio, Desporto, Ciência, Cultura, Formação e Opinião.
-- **Vozes** — um espaço para testemunhos de alunos, pais e professores, sempre revistos pela redação antes de publicados.
-- **Agenda** — os próximos eventos, prazos e celebrações.
-- **Galeria** — reportagens fotográficas, publicadas apenas com autorização das famílias.
-- **Arquivo e pesquisa** — tudo o que foi publicado, fácil de encontrar.
+- **Por disciplina** — no menu do topo, escolha a disciplina que quer acompanhar.
+- **Por professor** — o nome do autor em cada publicação mostra tudo o que esse professor já publicou.
+- **Partilhar** — cada publicação tem um botão para enviar por WhatsApp ou por email.
 
-O jornal continua a ser feito pelos alunos, com o acompanhamento de professores. Quem quiser escrever, fotografar ou simplesmente contar uma história encontra todas as indicações na página Participar, no rodapé do site.
+As restantes informações do colégio continuam no site oficial do Colégio Planalto.

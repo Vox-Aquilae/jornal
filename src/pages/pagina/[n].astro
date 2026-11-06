@@ -1,0 +1,28 @@
+---
+import Base from '../../layouts/Base.astro';
+import ListaNoticias from '../../components/ListaNoticias.astro';
+import { noticiasPublicadas, POR_PAGINA } from '../../lib/site';
+
+// A capa mostra as primeiras POR_PAGINA + 1; as páginas seguintes mostram POR_PAGINA cada.
+export async function getStaticPaths() {
+  const todas = await noticiasPublicadas();
+  const destaque = todas.find((n) => n.data.destaque) ?? todas[0];
+  const ordenadas = destaque ? [destaque, ...todas.filter((n) => n !== destaque)] : todas;
+  const resto = ordenadas.slice(POR_PAGINA + 1);
+  const paginas = Math.ceil(resto.length / POR_PAGINA);
+  return Array.from({ length: paginas }, (_, i) => ({
+    params: { n: String(i + 2) },
+    props: { lista: resto.slice(i * POR_PAGINA, (i + 1) * POR_PAGINA), n: i + 2, total: paginas + 1 },
+  }));
+}
+const { lista, n, total } = Astro.props;
+---
+<Base titulo={`Publicações — página ${n}`}>
+  <ListaNoticias
+    lista={lista}
+    titulo="Publicações anteriores"
+    subtitulo={`Página ${n} de ${total}`}
+    anterior={n === 2 ? '/' : `/pagina/${n - 1}/`}
+    seguinte={n < total ? `/pagina/${n + 1}/` : undefined}
+  />
+</Base>
